@@ -1,5 +1,5 @@
 # memetic-algorithms
-Playground for creating MAs for the master thesis preparation
+Playground for implementing and testing MAs for master thesis work.
 
-## Investigation:
-I will investigate the effect of local search frequency and depth on performance and solution quality.
+## Objective::
+Draw cause-effect conclusions about input and output of MAs.

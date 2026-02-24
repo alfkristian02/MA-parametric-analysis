@@ -10,8 +10,6 @@ using .ConfigParameters: dataset_file_name, fitness_function, population_size, n
 using .GetFitnessPool: get_precomputed_fitness_pool
 using .Utils
 
-println("Starting computation...")
-
 const base_fitness::Vector{Float64} = get_precomputed_fitness_pool(joinpath(@__DIR__, "data/precomputed_tables/", dataset_file_name))
 
 function fitness_function_wrapper(individual_binary::AbstractVector{Bool})::Float64
@@ -25,6 +23,7 @@ const global_optima::Float64 = fitness_function_wrapper(decimal_to_binary(findma
 const timestamp = Dates.format(now(), "mmddHHMM")
 const filename = joinpath(@__DIR__, "runs", "main_" * dataset_file_name * "_" * timestamp * ".csv")
 
+println("Starting computation...")
 for i in eachindex(local_search_frequencies)
     for j in eachindex(local_search_depths)
         for _ in 1:100

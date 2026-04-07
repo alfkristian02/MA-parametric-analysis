@@ -38,3 +38,5 @@ runs
 *.slurm
 
 .DS_Store
+
+/NK_dataset_generation/precomputed_synthetic

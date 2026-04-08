@@ -3,6 +3,7 @@ using StatsBase
 
 """
     Initialize a bit matrix with m rows and n columns.
+    All entries are random (1 or 0).
 """
 function initialize_bit_matrix(m::Int, n::Int)::BitMatrix
     return Random.bitrand((m, n))

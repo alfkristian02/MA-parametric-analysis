@@ -19,7 +19,7 @@ end
 """
     Get the neighbors of individual with hamming distance lower than, or equal to, depth.
 """
-function get_neighborhood(individual::BitVector, depth::Int)::Vector{BitVector}
+function get_neighborhood(individual::BitVector, depth::Int=1)::Vector{BitVector}
     n::Int = length(individual)
     neighbors::Vector{BitVector} = []
 
@@ -66,19 +66,51 @@ function SLS(individuals::Vector{BitVector}, fitness_function::Function, depth::
     
     for i in eachindex(individuals)
         current_individual = individuals[i]
+        temp_depth = 1
 
-        for j in 1:depth
-            candidates = get_neighborhood(current_individual, 1)
+        while temp_depth <= depth
+            candidates = get_neighborhood(current_individual)
 
             if rand() < p # Go to random neighbor
                 current_individual = rand(candidates)
             else
-                current_individual = ([candidates... , current_individual])[argmax(map(fitness_function, [candidates..., current_individual]))]
+                pool = [candidates..., current_individual]
+                current_individual = pool[argmax(fitness_function.(pool))]
             end
+
+            temp_depth += 1
         end
 
         final_individuals[i] = current_individual
     end
+
+    return final_individuals
+end
+
+function hill_climbing(individuals::Vector{BitVector}, fitness_function::Function, depth::Int)
+    final_individuals = Vector{BitVector}(undef, length(individuals))
+
+    for i in eachindex(individuals)
+        current_individual = individuals[i]
+        temp_depth = 1
+
+        while temp_depth <= depth
+            candidates = get_neighborhood(current_individual)
+            pool = [current_individual, candidates...]
+
+            new_individual = pool[argmax(fitness_function.(pool))]
+            
+            if new_individual == current_individual
+                break
+            end
+
+            current_individual = new_individual
+
+            temp_depth += 1
+        end
+
+        final_individuals[i] = current_individual
+    end  
 
     return final_individuals
 end

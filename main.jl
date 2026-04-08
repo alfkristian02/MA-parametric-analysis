@@ -6,7 +6,7 @@ include("config.jl")
 include("data/get_fitness_pool.jl")
 include("utils/Utils.jl")
 
-using .ConfigParameters: dataset_file_name, fitness_function, population_size, number_of_generations, mutation_rate, local_search_frequencies, local_search_depths, save_run, crossover_probability, sls_p
+using .ConfigParameters: dataset_file_name, fitness_function, population_size, number_of_generations, mutation_rate, local_search_frequencies, local_search_depths, save_run, crossover_probability, ls_p
 using .GetFitnessPool: get_precomputed_fitness_pool
 using .Utils
 
@@ -27,7 +27,7 @@ println("Starting computation...")
 for i in eachindex(local_search_frequencies)
     for j in eachindex(local_search_depths)
         for _ in 1:100
-            best_individual, best_fitness, history, fitness_function_accesses, diversity = sga(population_size, number_of_features, number_of_generations, fitness_function_wrapper, crossover_probability, mutation_rate, save_run, local_search_frequencies[i], local_search_depths[j], sls_p, global_optima, SLS)
+            best_individual, best_fitness, history, fitness_function_accesses, diversity = sga(population_size, number_of_features, number_of_generations, fitness_function_wrapper, crossover_probability, mutation_rate, save_run, local_search_frequencies[i], local_search_depths[j], ls_p, global_optima, hill_climbing)
 
             if save_run
                 df = DataFrame(

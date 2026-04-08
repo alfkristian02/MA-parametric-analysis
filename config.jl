@@ -14,8 +14,8 @@ module ConfigParameters
     end
 
     local_search_frequencies::Vector{Float64} = [.0, 1.0]
-    local_search_depths::Vector{Int} = [1]
-    sls_p::Float64 = 0.1 # make hill climbing with a probability of executing
+    local_search_depths::Vector{Int} = [2]
+    ls_p::Float64 = 0.1 # make hill climbing with a probability of executing
 
     # could add initialization variable. and implement one thats a bit more deterministic. better stability. e.g evenly distributed in the search space.
     population_size::Int = 250

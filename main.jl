@@ -2,6 +2,7 @@ using CSV
 using DataFrames
 using Dates
 
+include("types.jl")
 include("config.jl")
 include("data/get_fitness_pool.jl")
 include("utils/Utils.jl")

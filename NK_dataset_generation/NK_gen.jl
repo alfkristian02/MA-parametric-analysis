@@ -53,17 +53,13 @@ end
 # println(length(res) == 2^N)
 # println(mean(res))
 
-struct NKLandscape
-    table::Vector{Float64}
-    N::Int
-    K::Int
-end
+include("../types.jl")
 
 nk = NKLandscape(res, N, K)
 
 using JLD2
 path = "NK_dataset_generation/precomputed_synthetic/nk_K$(K).jld2"
-@save path nk
+nk = PrecomputedDataset(res, N, K)
 
 # @load path nk
 

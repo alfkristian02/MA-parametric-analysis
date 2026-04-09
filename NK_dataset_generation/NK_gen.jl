@@ -4,7 +4,7 @@ using Random
 Random.seed!(42) # 42 is always the answer
 
 N::Int64 = 25 #number of features
-K::Int64 = 24 #size of neighborhood
+K::Int64 = 22 #size of neighborhood
 
 
 interaction_sets = Dict{Int, Vector{Int}}()
@@ -55,11 +55,11 @@ end
 
 include("../types.jl")
 
-nk = NKLandscape(res, N, K)
+nk = PrecomputedDataset(res, N, K)
 
 using JLD2
-path = "NK_dataset_generation/precomputed_synthetic/nk_K$(K).jld2"
-nk = PrecomputedDataset(res, N, K)
+path = "data/nk_K$(K).jld2"
+@save path nk
 
 # @load path nk
 

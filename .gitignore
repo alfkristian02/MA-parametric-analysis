@@ -28,7 +28,9 @@ LocalPreferences.toml
 JuliaLocalPreferences.toml
 
 # data sets - precomputed tables
-data/*/
+data/*
+
+data_unstructured/*/
 
 # Output files for when running jobs
 idun

@@ -6,13 +6,13 @@
 """
 function sga(population_size::Int, number_of_features::Int, number_of_generations::Int, fitness_function::Function, crossover_probability::Float64, mutation_probability::Float64, save_run::Bool, ls_frequency::Float64, ls_depth::Int, global_optima, local_search=nothing)
     population::BitMatrix = initialize_bit_matrix(population_size, number_of_features)
-    global_best_individual = get_best_individual(population, fitness_function)
+    current_best = get_best_individual(population, fitness_function)
     fitness_function_accesses::Int = 0
 
     best_per_generation = save_run ? Float64[] : nothing
 
     if save_run
-        push!(best_per_generation, global_best_individual[2])
+        push!(best_per_generation, current_best[2])
     end
 
     for _ = 1:number_of_generations
@@ -28,8 +28,8 @@ function sga(population_size::Int, number_of_features::Int, number_of_generation
         if local_search !== nothing && ls_frequency !== 0.0 && ls_depth !== nothing
             if rand() < ls_frequency 
                 for i in eachindex(mutations)
-                    mutations[i] = local_search([mutations[i]], fitness_function, ls_depth)[1]
-                    # TODO: handle the fitness function access count.
+                    mutations[i], ff_evals = local_search(mutations[i], fitness_function, ls_depth)
+                    fitness_function_accesses += ff_evals
                 end
             end
         end
@@ -37,10 +37,11 @@ function sga(population_size::Int, number_of_features::Int, number_of_generation
         population = reshape(reduce(vcat, mutations), population_size, number_of_features)
 
         best_individual = get_best_individual(population, fitness_function)
-        fitness_function_accesses += population_size
-        
-        if best_individual[2] > global_best_individual[2]
-            global_best_individual = best_individual
+        # This could have been optimized to be done in the next generations roulette wheel selection (where all are evaluated), 
+        # so I will leave it out
+        # fitness_function_accesses += population_size
+        if best_individual[2] > current_best[2]
+            current_best = best_individual
         end
 
         if save_run
@@ -53,5 +54,5 @@ function sga(population_size::Int, number_of_features::Int, number_of_generation
         end
     end
 
-    return global_best_individual..., best_per_generation, fitness_function_accesses, average_hamming_distance([BitVector(population[i, :]) for i in 1:size(population, 1)])
+    return current_best..., best_per_generation, fitness_function_accesses, average_hamming_distance([BitVector(population[i, :]) for i in 1:size(population, 1)])
 end

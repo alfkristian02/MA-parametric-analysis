@@ -87,32 +87,30 @@ function SLS(individuals::Vector{BitVector}, fitness_function::Function, depth::
     return final_individuals
 end
 
-function hill_climbing(individuals::Vector{BitVector}, fitness_function::Function, depth::Int)
-    final_individuals = Vector{BitVector}(undef, length(individuals))
+function hill_climbing(individual::BitVector, fitness_function::Function, max_steps::Int)
+    best_found = individual
+    ff_evals = 0
 
-    for i in eachindex(individuals)
-        current_individual = individuals[i]
-        temp_depth = 1
+    steps_taken = 0
 
-        while temp_depth <= depth
-            candidates = get_neighborhood(current_individual)
-            pool = [current_individual, candidates...]
+    while steps_taken < max_steps
+        candidates = get_neighborhood(best_found)
+        pool = [best_found, candidates...]
 
-            new_individual = pool[argmax(fitness_function.(pool))]
-            
-            if new_individual == current_individual
-                break
-            end
+        new_individual = pool[argmax(fitness_function.(pool))]
 
-            current_individual = new_individual
-
-            temp_depth += 1
+        ff_evals += length(pool)
+        
+        if new_individual == best_found # no improvement can be made
+            break
         end
 
-        final_individuals[i] = current_individual
-    end  
+        best_found = new_individual
 
-    return final_individuals
+        steps_taken += 1
+    end
+
+    return best_found, ff_evals
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__

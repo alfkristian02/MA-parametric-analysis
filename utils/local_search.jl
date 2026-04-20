@@ -89,7 +89,6 @@ end
 
 function hill_climbing(individual::BitVector, fitness_function::Function, max_steps::Int)
     best_found = individual
-    ff_evals = 0
 
     steps_taken = 0
 
@@ -99,8 +98,6 @@ function hill_climbing(individual::BitVector, fitness_function::Function, max_st
 
         new_individual = pool[argmax(fitness_function.(pool))]
 
-        ff_evals += length(pool)
-        
         if new_individual == best_found # no improvement can be made
             break
         end
@@ -110,7 +107,7 @@ function hill_climbing(individual::BitVector, fitness_function::Function, max_st
         steps_taken += 1
     end
 
-    return best_found, ff_evals
+    return best_found
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__

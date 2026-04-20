@@ -1,34 +1,33 @@
 module ConfigParameters
-    export number_of_features, fitness_function, global_optimum, population_size, number_of_generations, mutation_rate, ls_frequencies_p, ls_depths, save_run, crossover_probability
+    export dataset_filename, number_of_features, fitness_function, global_optimum, save_run
+    export population_sizes, number_of_generations, crossover_probabilities, mutation_rates, ls_p_values, ls_max_steps
     
     using JLD2
 
-    # heart_13.jld2 || credit_15.jld2 || hep_19.jld2
-    # nk_K3.jld2 || nk_K13.jld2 || nk_K22.jld2
-    const dataset_filename = "heart_13.jld2"
-    const dataset_path::String = joinpath(@__DIR__, "data/",   dataset_filename)
+    # heart_13 || credit_15 || hep_19 || nk_K3 || nk_K13 || nk_K22
+    const dataset_filename = "heart_13"
+    const dataset_path::String = joinpath(@__DIR__, "data/",   dataset_filename*".jld2")
 
-    @load dataset_path nk # the name nk is just cause I generated the NK datasets first and had that name
+    @load dataset_path nk # the name nk is just cause I generated the NK datasets first, so the name is set in code. Arguably more solid than stone.
     const base_fitness = nk.table
     const number_of_features = nk.N
 
-    const EPSILON::Float64 = 0.001
+    const EPSILON::Float64 = .001
 
     function fitness_function(individual_decimal::Int)::Float64
-        return base_fitness[individual_decimal + 1] - EPSILON * count_ones(individual_decimal) # adjust for 1-indexing
+        return base_fitness[individual_decimal + 1] - EPSILON * count_ones(individual_decimal) # +1 to adjust for 1-indexing
     end
 
-    const global_optimum::Float64 = maximum(fitness_function(i) for i in 0:(2^number_of_features - 1))
+    const global_optimum::Float64 = maximum(fitness_function, 0:(2^number_of_features - 1))
 
+    save_run::Bool = 1
 
-    ls_frequencies_p::Vector{Float64} = [1.0]
-    ls_depths::Vector{Int} = [2]
-    
-    population_size::Int = 250
-    number_of_generations::Int = 5 # Maybe number of fitness evaluations is a better alternative. It is what the analysis will use.
-    crossover_probability::Float64 = 0.10
-    mutation_rate::Float64 = 0.05
+    # ------------- varying variables -------------
+    population_sizes::Vector{Int} = [10, 20] 
+    number_of_generations::Vector{Int} = [10, 20]
+    crossover_probabilities::Vector{Float64} = [.0, 0.1]
+    mutation_rates::Vector{Float64} = [.0, 0.1]
 
-    save_run::Bool = 0
-
+    ls_p_values::Vector{Float64} = [.0, 1.]
+    ls_max_steps::Vector{Int} = [0, 1]
 end

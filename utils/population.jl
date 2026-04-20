@@ -22,9 +22,7 @@ end
 """
     Roulette wheel selection.
 """
-function roulette_wheel_selection(population::BitMatrix, fitness_function::Function, n::Int)::Vector{BitVector}
-    fitness_map = map(fitness_function, eachrow(population))
-
+function roulette_wheel_selection(population::BitMatrix, fitness_map::Vector{Float64}, n::Int)::Vector{BitVector}
     probability_proportions = fitness_map ./ sum(fitness_map)
 
     selected = sample(eachrow(population), Weights(probability_proportions), n)

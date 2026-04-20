@@ -96,7 +96,7 @@ function hill_climbing(individual::BitVector, fitness_function::Function, max_st
         candidates = get_neighborhood(best_found)
         pool = [best_found, candidates...]
 
-        new_individual = pool[argmax(fitness_function.(pool))]
+        new_individual = pool[argmax(fitness_function.(pool, trues(length(pool))))]
 
         if new_individual == best_found # no improvement can be made
             break

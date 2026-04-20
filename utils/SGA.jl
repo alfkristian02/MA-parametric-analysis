@@ -10,11 +10,15 @@ function sga(population_size::Int, number_of_features::Int, number_of_generation
     current_best::Union{Nothing, Tuple{BitVector, Float64}} = nothing
     
     best_per_generation = save_run ? Float64[] : nothing
+
+    ls_activations = 0
+    ga_improvement = Float64[]
+    ls_improvement = Float64[]
     
     for _ = 1:number_of_generations
 
         # ------------ update things
-        fitness_map = map(fitness_function, eachrow(population))
+        fitness_map = map(fitness_function, eachrow(population), trues(size(population, 1)))
         val, idx = findmax(fitness_map)
         best_individual = (population[idx, :], val)
         if isnothing(current_best) || best_individual[2] > current_best[2]
@@ -35,17 +39,28 @@ function sga(population_size::Int, number_of_features::Int, number_of_generation
         offspring::Vector{BitVector} = one_point_crossover(parents, crossover_probability)
 
         mutations::Vector{BitVector} = bit_flip_mutation(offspring, mutation_probability) 
+
+        # log ga improvement
+        mutations_map = map(fitness_function, mutations, falses(length(mutations)))
+        push!(ga_improvement, (sum(mutations_map) - sum(fitness_map)) / population_size)
         
         if local_search !== nothing && ls_depth !== nothing
             if rand() < ls_frequency 
                 for i in eachindex(mutations)
                     mutations[i] = local_search(mutations[i], fitness_function, ls_depth)
+                    ls_activations += 1
                 end
+
+                # log ls improvement
+                push!(ls_improvement, (sum(map(fitness_function, mutations, falses(length(mutations)))) - sum(mutations_map)) / ls_activations)
+                ls_activations = 0
             end
         end
 
         population = reshape(reduce(vcat, mutations), population_size, number_of_features)
     end
 
-    return current_best..., best_per_generation, average_hamming_distance([BitVector(population[i, :]) for i in 1:size(population, 1)])
+
+
+    return current_best..., best_per_generation, average_hamming_distance([BitVector(population[i, :]) for i in 1:size(population, 1)]), isempty(ga_improvement) ? NaN : mean(ga_improvement), isempty(ls_improvement) ? NaN : mean(ls_improvement)
 end

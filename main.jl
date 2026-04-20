@@ -12,8 +12,10 @@ using .Utils
 
 const FITNESS_FUNCTION_ACCESSES = Ref(0)
 
-function fitness_function_wrapper(individual::AbstractVector{Bool})::Float64
-    FITNESS_FUNCTION_ACCESSES[] += 1
+function fitness_function_wrapper(individual::AbstractVector{Bool}, log_access::Bool)::Float64
+    if log_access
+        FITNESS_FUNCTION_ACCESSES[] += 1
+    end
     return fitness_function(binary_to_decimal(BitVector(individual)))
 end
 
@@ -26,26 +28,26 @@ parameter_combinations = Iterators.product(population_sizes, number_of_generatio
 
 println("Starting computation...")
 @showprogress desc="Computing..." for combination in parameter_combinations
-    best_individual, best_fitness, history, diversity = sga(combination[1], number_of_features, combination[2], fitness_function_wrapper, combination[3], combination[4], save_run, combination[5], combination[6], global_optimum, hill_climbing)
+    best_individual, best_fitness, history, diversity, ga_improvement, ls_improvement = sga(combination[1], number_of_features, combination[2], fitness_function_wrapper, combination[3], combination[4], save_run, combination[5], combination[6], global_optimum, hill_climbing)
 
     if save_run
         df = DataFrame(
             # exogenous
+            ds = dataset_filename,
             population_size = combination[1],
             number_of_generations = combination[2],
             crossover_probability = combination[3],
             mutation_rate = combination[4],
             ls_p_value = combination[5],
             ls_max_steps = combination[6],
-            ds = dataset_filename,
 
             # endogenous
-            ds_diff = "to be determined",
-            # ls improvement
-            # ga improvement
+            ds_diff = "tbd",
+            avg_ga_improvement = ga_improvement,
+            avg_ls_improvement = ls_improvement,
             best_found = best_fitness,
 
-            # will probably be useful
+            # might be useful
             fitness_function_accesses = FITNESS_FUNCTION_ACCESSES,
             history = Ref(history)
         )

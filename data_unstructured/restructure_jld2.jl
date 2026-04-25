@@ -6,19 +6,18 @@
 include("../types.jl")
 using JLD2
 
-ds = load("data_unstructured/precomputed_tables/10-hepatitis_dt_matG.jld2")
-N::Int = 19
+ds = load("data_unstructured/precomputed_tables/09-letter-r_dt_matG.jld2")
+save_path = "data/letter_16.jld2"
 
 table::Vector{Float64} = ds["single_stored_object"][:, 1]
-
 prepend!(table, .0)
+N::Int = log2(length(table))
 
 println(log2(length(table)))
 
-nk = PrecomputedDataset(table, N, 0)
+nk = PrecomputedDataset(table, N, 0) # K has no meaning for these datasets
 
-path = "data/hep_19.jld2"
 
-@save path nk
+@save save_path nk
 
 println("finished")

@@ -1,40 +1,21 @@
+include("../types.jl")
 include("../config.jl")
-include("../data/get_fitness_pool.jl")
-include("../utils/number_conversion.jl")
-include("../utils/local_search.jl")
+include("../utils/Utils.jl")
 
-using .ConfigParameters: EPSILON
-using .GetFitnessPool: get_precomputed_fitness_pool
-using .BinaryDecimalConversion: decimal_to_binary, binary_to_decimal
-using .LocalSearch: get_neighborhood
+using .ConfigParameters
+using .Utils
 
-const file_name::String = "05-heart-c_dt_mat-1.jld2" # 05-heart-c_dt_mat-1.jld2 || 07-credit-a_dt_matG.jld2 || 10-hepatitis_dt_matG.jld2
-const load_fitness::Vector{Float64} = get_precomputed_fitness_pool(joinpath(@__DIR__, "../data/precomputed_tables/", file_name))
-const number_of_features::Int = log2(1+length(load_fitness))
-
-function fitness_function(individual)::Float64
-    decimal_representation = binary_to_decimal(BitVector(individual))
-
-    if decimal_representation == 0
-        return .0
-    end
-
-    base_fitness = load_fitness[decimal_representation]
-    penalty = sum(individual)
-
-    return base_fitness - EPSILON * penalty
-end
-
+all_x = [i for i in 0:(2^number_of_features-1)]
 
 count_optima::Int = 0
 
-for value in eachindex(load_fitness)
-    binary = decimal_to_binary(value, number_of_features)
-    current_fitness = fitness_function(binary)
+for x in all_x
+    current_fitness = round(fitness_function(x), digits=3)
 
+    binary = decimal_to_binary(x, number_of_features)
     neighborhood = get_neighborhood(binary, 1)
 
-    best_fitness = findmax(map(fitness_function, neighborhood))[1]
+    best_fitness = maximum(round.(fitness_function.(binary_to_decimal.(neighborhood)), digits=3))
 
     if current_fitness >= best_fitness
         global count_optima += 1

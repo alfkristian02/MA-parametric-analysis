@@ -1,7 +1,7 @@
 using StatsBase
 using Random
 
-Random.seed!(42) # 42 is always the answer
+Random.seed!(42) # that is the answer, but whats the question?
 
 N::Int64 = 25 #number of features
 K::Int64 = 22 #size of neighborhood

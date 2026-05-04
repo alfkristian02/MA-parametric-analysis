@@ -4,6 +4,6 @@
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [],
-    "ignoreWords": ["evals", "showprogress"],
+    "ignoreWords": ["evals", "showprogress", "pcalg"],
     "import": []
 }

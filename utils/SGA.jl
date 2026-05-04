@@ -44,14 +44,16 @@ function sga(population_size::Int, number_of_features::Int, number_of_generation
         mutations_map = map(fitness_function, mutations, falses(length(mutations)))
         push!(ga_improvement, (sum(mutations_map) - sum(fitness_map)) / population_size)
         
-        if local_search !== nothing && ls_depth !== nothing
-            if rand() < ls_frequency 
-                for i in eachindex(mutations)
+        if local_search !== nothing && ls_depth !== nothing && ls_frequency > .0
+            for i in eachindex(mutations)
+                if rand() < ls_frequency 
                     mutations[i] = local_search(mutations[i], fitness_function, ls_depth)
                     ls_activations += 1
                 end
+            end
 
-                # log ls improvement
+            # log ls improvement
+            if ls_activations > 0
                 push!(ls_improvement, (sum(map(fitness_function, mutations, falses(length(mutations)))) - sum(mutations_map)) / ls_activations)
                 ls_activations = 0
             end

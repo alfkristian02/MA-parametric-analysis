@@ -1,14 +1,9 @@
-using CSV
-using DataFrames
-using Dates
-using ProgressMeter
-
 include("types.jl")
 include("config.jl")
 include("utils/Utils.jl")
 
-using .ConfigParameters
-using .Utils
+using .ConfigParameters, .Utils
+using CSV, DataFrames, Dates, ProgressMeter
 
 const FITNESS_FUNCTION_ACCESSES = Ref(0)
 
@@ -28,28 +23,23 @@ parameter_combinations = Iterators.product(population_sizes, number_of_generatio
 
 println("Starting computation...")
 @showprogress desc="Computing..." for combination in parameter_combinations
-    best_individual, best_fitness, history, diversity, ga_improvement, ls_improvement = sga(combination[1], number_of_features, combination[2], fitness_function_wrapper, combination[3], combination[4], save_run, combination[5], combination[6], global_optimum, hill_climbing)
+    best_individual, best_fitness, generations, ga_improvement, ls_improvement = sga(combination[1], number_of_features, combination[2], fitness_function_wrapper, combination[3], combination[4], save_run, combination[5], combination[6], global_optimum, hill_climbing)
 
     if save_run
         df = DataFrame(
-            # exogenous
-            ds = dataset_filename,
-            population_size = combination[1],
-            number_of_generations = combination[2],
-            crossover_probability = combination[3],
-            mutation_rate = combination[4],
-            ls_p_value = combination[5],
-            ls_max_steps = combination[6],
+            Dataset = dataset_filename,
+            PopulationSize = combination[1],
+            MaxGenerations = combination[2],
+            CrossoverProbability = combination[3],
+            MutationRate = combination[4],
+            LSProbability = combination[5],
+            LSMaxSteps = combination[6],
 
-            # endogenous
-            ds_diff = "tbd",
-            avg_ga_improvement = ga_improvement,
-            avg_ls_improvement = ls_improvement,
-            best_found = best_fitness,
-
-            # might be useful
-            fitness_function_accesses = FITNESS_FUNCTION_ACCESSES,
-            history = Ref(history)
+            ActualGenerations = generations,
+            TotalGAImprovement = ga_improvement,
+            TotalLSImprovement = ls_improvement,
+            BestFound = best_fitness,
+            FitnessFunctionEvaluations = FITNESS_FUNCTION_ACCESSES
         )
 
         CSV.write(filename, df; append=isfile(filename))

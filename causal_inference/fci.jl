@@ -13,9 +13,9 @@ cop = dropmissing!(copy(combined))
 
 # println(cop)
 
-pc = pcalg(cop, .005, gausscitest)
+fci = fcialg(cop, .005, gausscitest)
 
 gplothtml(pc,
     nodelabel = names(cop),
-    title = "PC"
+    title = "FCI"
 )

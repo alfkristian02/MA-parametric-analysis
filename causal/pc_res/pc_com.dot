@@ -19,22 +19,23 @@ digraph {
     label="General Params"; style=dashed; color="#aaaaaa"; fontsize=25
     "PopulationSize"; "MaxGenerations";
   }
+  "NormalizedBestFound" -> "GAImprovement" [dir=none];
+  "NormalizedBestFound" -> "LSImprovement" [dir=none];
   "CrossoverProbability" -> "GAImprovement";
-  "MutationRate" -> "NormalizedBestFound";
   "MutationRate" -> "GAImprovement";
-  "LSProbability" -> "NormalizedBestFound";
+  "MutationRate" -> "LSImprovement";
+  "LSProbability" -> "NormalizedBestFound" [dir=none];
   "LSProbability" -> "GAImprovement";
   "LSProbability" -> "LSImprovement";
-  "LSMaxSteps" -> "NormalizedBestFound";
   "LSMaxSteps" -> "LSImprovement";
   "LSImprovement" -> "GAImprovement";
-  "PopulationSize" -> "NormalizedBestFound";
-  "MaxGenerations" -> "NormalizedBestFound";
+  "PopulationSize" -> "NormalizedBestFound" [dir=none];
+  "MaxGenerations" -> "NormalizedBestFound" [dir=none];
   "Autocorrelation" -> "GAImprovement";
   "Autocorrelation" -> "LSImprovement";
-  "NumberOfFeatures" -> "NormalizedBestFound";
-  "NumberOfFeatures" -> "GAImprovement";
+  "NumberOfFeatures" -> "NormalizedBestFound" [dir=none];
   "NumberOfFeatures" -> "LSImprovement";
+  "NumberOfLOs" -> "NormalizedBestFound" [dir=none];
   "NumberOfLOs" -> "GAImprovement";
   "NumberOfLOs" -> "LSImprovement";
 }

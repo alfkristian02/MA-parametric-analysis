@@ -6,9 +6,8 @@ using DataFrames, CSV, CausalInference, GraphPlot, Compose, Graphs
 # dotname = "pc_nat"
 files::Vector{String} = ["heart_13.csv", "zoo_16.csv", "hep_19.csv", "nk_16_9.csv", "nk_18_3.csv", "nk_19_16.csv"]
 dotname = "pc_com"
-
-
 included_columns::Vector{String} = ["NormalizedBestFound","CrossoverProbability","MutationRate","LSProbability","LSMaxSteps", "GAImprovement", "LSImprovement", "PopulationSize", "MaxGenerations", "Autocorrelation", "NumberOfFeatures", "NumberOfLOs"]
+
 load_data = [select(CSV.read(joinpath("runs", file), DataFrame), included_columns) for file in files]
 combined = reduce(vcat, load_data, cols=:union)
 
@@ -51,19 +50,7 @@ for i in dataset_nodes
 end
 
 node_names = names(combined)
-
-# gplothtml(
-#     pc,
-#     layout = spring_layout,
-#     nodelabel = node_names,
-#     nodelabelsize = 6.0,
-#     plot_size = (50cm, 50cm),
-#     leftpad   = 2cm,
-#     rightpad  = 2cm,
-#     toppad    = 2cm,
-#     bottompad = 2cm,
-#     title = "PC"
-# )
+undirected_nodes = Set(["NormalizedBestFound"])
 
 println(files)
 println(accuracy)
@@ -95,20 +82,18 @@ open(joinpath("causal", "pc_res", dotname*".dot"), "w") do io
     println(io, "    \"PopulationSize\"; \"MaxGenerations\";")
     println(io, "  }")
 
-    # for n in input_set
-    #     println(io, "  \"$n\" [fillcolor=\"#cce5ff\" color=\"#336699\"];")
-    # end
-    # for n in output_set
-    #     println(io, "  \"$n\" [fillcolor=\"#e8f4ff\" color=\"#336699\"];")
-    # end
-
     for e in edges(pc)
         src_name = node_names[src(e)]
         dst_name = node_names[dst(e)]
-        println(io, "  \"$src_name\" -> \"$dst_name\";")
+        if src_name in undirected_nodes || dst_name in undirected_nodes
+            println(io, "  \"$src_name\" -> \"$dst_name\" [dir=none];")
+        else
+            println(io, "  \"$src_name\" -> \"$dst_name\";")
+        end
     end
+
     println(io, "}")
 end
 
 using Graphviz_jll
-run(`$(Graphviz_jll.fdp()) -Tpdf $(joinpath("causal", "pc_res", dotname*".dot")) -o $(joinpath("causal", "pc_res", dotname*".pdf"))`)
+run(`$(Graphviz_jll.fdp()) -Tpng $(joinpath("causal", "pc_res", dotname*".dot")) -o $(joinpath("causal", "pc_res", dotname*".png"))`)

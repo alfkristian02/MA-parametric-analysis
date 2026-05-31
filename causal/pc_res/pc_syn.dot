@@ -20,17 +20,17 @@ digraph {
     "PopulationSize"; "MaxGenerations";
   }
   "CrossoverProbability" -> "GAImprovement";
-  "MutationRate" -> "NormalizedBestFound";
+  "MutationRate" -> "NormalizedBestFound" [dir=none];
   "MutationRate" -> "GAImprovement";
+  "LSProbability" -> "NormalizedBestFound" [dir=none];
   "LSProbability" -> "LSImprovement";
   "LSMaxSteps" -> "LSImprovement";
-  "GAImprovement" -> "LSImprovement";
-  "LSImprovement" -> "NormalizedBestFound";
-  "PopulationSize" -> "NormalizedBestFound";
-  "MaxGenerations" -> "NormalizedBestFound";
+  "GAImprovement" -> "NormalizedBestFound" [dir=none];
+  "PopulationSize" -> "NormalizedBestFound" [dir=none];
+  "MaxGenerations" -> "NormalizedBestFound" [dir=none];
   "Autocorrelation" -> "GAImprovement";
-  "NumberOfFeatures" -> "NormalizedBestFound";
+  "NumberOfFeatures" -> "NormalizedBestFound" [dir=none];
   "NumberOfFeatures" -> "GAImprovement";
-  "NumberOfLOs" -> "NormalizedBestFound";
+  "NumberOfLOs" -> "NormalizedBestFound" [dir=none];
   "NumberOfLOs" -> "GAImprovement";
 }

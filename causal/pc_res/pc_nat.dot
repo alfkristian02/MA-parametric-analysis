@@ -1,0 +1,42 @@
+digraph {
+  rankdir=TB;
+  bgcolor=white;
+  node [shape=ellipse fontsize=20 fontname="Helvetica" style=filled fillcolor="#ddeeff" color="#336699" penwidth=1.5 margin=0.1];
+  edge [penwidth=1.5 arrowsize=1.0];
+  subgraph cluster_dataset {
+    label="Dataset descriptor"; style=dashed; color="#aaaaaa"; fontsize=25
+    "Autocorrelation"; "NumberOfFeatures"; "NumberOfLOs";
+  }
+  subgraph cluster_ga {
+    label="GA Params"; style=dashed; color="#aaaaaa"; fontsize=25
+    "CrossoverProbability"; "MutationRate";
+  }
+  subgraph cluster_ls {
+    label="LS Params"; style=dashed; color="#aaaaaa"; fontsize=25
+    "LSProbability"; "LSMaxSteps";
+  }
+  subgraph cluster_general {
+    label="General Params"; style=dashed; color="#aaaaaa"; fontsize=25
+    "PopulationSize"; "MaxGenerations";
+  }
+  "CrossoverProbability" -> "GAImprovement";
+  "MutationRate" -> "NormalizedBestFound";
+  "MutationRate" -> "GAImprovement";
+  "MutationRate" -> "LSImprovement";
+  "LSProbability" -> "LSImprovement";
+  "LSMaxSteps" -> "NormalizedBestFound";
+  "LSMaxSteps" -> "GAImprovement";
+  "LSMaxSteps" -> "LSImprovement";
+  "PopulationSize" -> "NormalizedBestFound";
+  "PopulationSize" -> "LSImprovement";
+  "MaxGenerations" -> "NormalizedBestFound";
+  "Autocorrelation" -> "NormalizedBestFound";
+  "Autocorrelation" -> "GAImprovement";
+  "Autocorrelation" -> "LSImprovement";
+  "NumberOfFeatures" -> "NormalizedBestFound";
+  "NumberOfFeatures" -> "GAImprovement";
+  "NumberOfFeatures" -> "LSImprovement";
+  "NumberOfLOs" -> "NormalizedBestFound";
+  "NumberOfLOs" -> "GAImprovement";
+  "NumberOfLOs" -> "LSImprovement";
+}

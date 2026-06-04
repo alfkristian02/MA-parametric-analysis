@@ -13,6 +13,7 @@ function sga(population_size::Int, number_of_features::Int, number_of_generation
 
     total_ga_improvement::Float64 = .0
     total_ls_improvement::Float64 = .0
+    total_hd_diversity::Float64 = .0
     
     last_generation = 0
     for i = 1:number_of_generations
@@ -32,8 +33,8 @@ function sga(population_size::Int, number_of_features::Int, number_of_generation
             break
         end
 
-
-
+        # total_hd_diversity += total_hamming_distance([BitVector(row) for row in eachrow(population)])
+        
         parents::Vector{BitVector} = roulette_wheel_selection(population, fitness_map, size(population, 1))
         shuffle!(parents) # in-place shuffle
 
@@ -60,5 +61,5 @@ function sga(population_size::Int, number_of_features::Int, number_of_generation
         population = reshape(reduce(vcat, mutations), population_size, number_of_features)
     end
 
-    return current_best[1], current_best[2], last_generation, total_ga_improvement, total_ls_improvement
+    return current_best[1], current_best[2], last_generation, total_ga_improvement, total_ls_improvement, total_hd_diversity
 end

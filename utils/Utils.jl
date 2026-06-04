@@ -9,7 +9,7 @@ include("population.jl")
 include("SGA.jl")
 
 export one_point_crossover
-export average_hamming_distance
+export average_hamming_distance, total_hamming_distance
 export hamming_neighborhood_search, SLS, get_neighborhood, hill_climbing
 export bit_flip_mutation
 export binary_to_decimal, decimal_to_binary

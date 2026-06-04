@@ -35,6 +35,7 @@ data_unstructured/*/
 
 # Output files for when running jobs
 runs
+!dataset_criteria/runs
 
 .DS_Store
 

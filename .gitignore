@@ -29,16 +29,17 @@ JuliaLocalPreferences.toml
 
 # data sets - precomputed tables
 data/*
+!data/restructure_jld2.jl
 
 data_unstructured/*/
 
 # Output files for when running jobs
-idun
 runs
-
-# sh job scheduling
-*.slurm
 
 .DS_Store
 
 /NK_dataset_generation/precomputed_synthetic
+
+test.jl
+
+cspell.json

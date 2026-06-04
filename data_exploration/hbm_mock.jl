@@ -16,17 +16,17 @@ y = [binary_to_decimal(b[(half+1):bits_length]) for b in bits_list]
 
 local_optima_idx = Int[]
 for i in 1:n
-    current_fitness = round(fitness_values[i], digits=3)
+    current_fitness = fitness_values[i]
     neighborhood = get_neighborhood(bits_list[i], 1)
     neighbor_fitnesses = [fitness_values[findfirst(==(nb), bits_list)] for nb in neighborhood]
-    best_neighbor = maximum(round.(neighbor_fitnesses, digits=3))
+    best_neighbor = maximum(neighbor_fitnesses)
     if current_fitness >= best_neighbor
         push!(local_optima_idx, i)
     end
 end
 
-global_max = maximum(round.(fitness_values, digits=3))
-global_optima_idx = [i for i in local_optima_idx if round(fitness_values[i], digits=3) == global_max]
+global_max = maximum(fitness_values)
+global_optima_idx = [i for i in local_optima_idx if fitness_values[i] == global_max]
 strict_local_idx = setdiff(local_optima_idx, global_optima_idx)
 
 println("GO count: ", length(global_optima_idx))

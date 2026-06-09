@@ -2,7 +2,7 @@ include("../utils/Utils.jl")
 using .Utils, JSON, Plots, Plots.PlotMeasures
 gr()
 
-data = JSON.parsefile(joinpath("data_exploration", "mock.json"))
+data = JSON.parsefile(joinpath("exploration_data", "mock.json"))
 individuals = data["individuals"]
 n = length(individuals)
 bits_length = length(individuals[1]["bits"])
@@ -76,4 +76,4 @@ scatter!(
     right_margin = 10mm,
 )
 
-savefig(plt, "data_exploration/hbm/mock.png")
+savefig(plt, "exploration_data/hbm/mock.png")

@@ -1,6 +1,10 @@
 digraph {
   rankdir=TB;
   bgcolor=white;
+  nodesep=0.8;
+  ranksep=1.2;
+  splines=true;
+  bgcolor=white;
   node [shape=ellipse fontsize=20 fontname="Helvetica" style=filled fillcolor="#ddeeff" color="#336699" penwidth=1.5 margin=0.1];
   edge [penwidth=1.5 arrowsize=1.0];
   subgraph cluster_dataset {
@@ -20,17 +24,14 @@ digraph {
     "PopulationSize"; "MaxGenerations";
   }
   "CrossoverProbability" -> "GAImprovement";
-  "MutationRate" -> "NormalizedBestFound" [dir=none];
   "MutationRate" -> "GAImprovement";
-  "LSProbability" -> "NormalizedBestFound" [dir=none];
   "LSProbability" -> "LSImprovement";
   "LSMaxSteps" -> "LSImprovement";
-  "GAImprovement" -> "NormalizedBestFound" [dir=none];
   "PopulationSize" -> "NormalizedBestFound" [dir=none];
   "MaxGenerations" -> "NormalizedBestFound" [dir=none];
+  "Autocorrelation" -> "NormalizedBestFound" [dir=none];
   "Autocorrelation" -> "GAImprovement";
   "NumberOfFeatures" -> "NormalizedBestFound" [dir=none];
   "NumberOfFeatures" -> "GAImprovement";
   "NumberOfLOs" -> "NormalizedBestFound" [dir=none];
-  "NumberOfLOs" -> "GAImprovement";
 }

@@ -1,11 +1,11 @@
 using DataFrames, CSV, CausalInference, GraphPlot, Compose, Graphs
 
-# files::Vector{String} = ["nk_16_9.csv", "nk_18_3.csv", "nk_19_16.csv"]
+# files::Vector{String} = ["nk_19_10.csv", "nk_20_16.csv", "nk_21_4.csv"]
 # dotname = "pc_syn"
-# files::Vector{String} = ["heart_13.csv", "zoo_16.csv", "hep_19.csv"]
-# dotname = "pc_nat"
-files::Vector{String} = ["heart_13.csv", "zoo_16.csv", "hep_19.csv", "nk_16_9.csv", "nk_18_3.csv", "nk_19_16.csv"]
-dotname = "pc_com"
+files::Vector{String} = ["heart_13.csv", "zoo_16.csv", "hep_19.csv"]
+dotname = "pc_nat"
+# files::Vector{String} = ["heart_13.csv", "zoo_16.csv", "hep_19.csv", "nk_19_10.csv", "nk_20_16.csv", "nk_21_4.csv"]
+# dotname = "pc_com"
 included_columns::Vector{String} = ["NormalizedBestFound","CrossoverProbability","MutationRate","LSProbability","LSMaxSteps", "GAImprovement", "LSImprovement", "PopulationSize", "MaxGenerations", "Autocorrelation", "NumberOfFeatures", "NumberOfLOs"]
 
 load_data = [select(CSV.read(joinpath("runs", file), DataFrame), included_columns) for file in files]
@@ -30,7 +30,6 @@ for v in input_nodes
     for u in 1:nv(pc)
         if has_edge(pc, u, v)
             rem_edge!(pc, u, v)
-            add_edge!(pc, v, u)
         end
     end
 end
@@ -58,6 +57,10 @@ println(accuracy)
 open(joinpath("causal", "pc_res", dotname*".dot"), "w") do io
     println(io, "digraph {")
     println(io, "  rankdir=TB;")
+    println(io, "  bgcolor=white;")
+    println(io, "  nodesep=0.8;")
+    println(io, "  ranksep=1.2;")
+    println(io, "  splines=true;")
     println(io, "  bgcolor=white;")
     println(io, "  node [shape=ellipse fontsize=20 fontname=\"Helvetica\" style=filled fillcolor=\"#ddeeff\" color=\"#336699\" penwidth=1.5 margin=0.1];")
     println(io, "  edge [penwidth=1.5 arrowsize=1.0];")
@@ -96,4 +99,5 @@ open(joinpath("causal", "pc_res", dotname*".dot"), "w") do io
 end
 
 using Graphviz_jll
+# run(`$(Graphviz_jll.fdp()) -Tpng $(joinpath("causal", "pc_res", dotname*".dot")) -o $(joinpath("causal", "pc_res", dotname*".png"))`)
 run(`$(Graphviz_jll.fdp()) -Tpng $(joinpath("causal", "pc_res", dotname*".dot")) -o $(joinpath("causal", "pc_res", dotname*".png"))`)
